@@ -13,7 +13,8 @@
 
 	<modules>
 		<module>sql-helper</module>
-		<module>sql-helper-demo</module>
+		<module>spring-data-jdbc-repository</module>
+		<module>jdbc-repository-demo</module>
 	</modules>
 
 	<properties>
