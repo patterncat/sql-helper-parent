@@ -1,6 +1,7 @@
 package cn.patterncat.helper.sql.criteria;
 
 import cn.patterncat.helper.sql.builder.SQL;
+import cn.patterncat.helper.sql.util.ValueUtils;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.util.StringUtils;
@@ -9,6 +10,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 /**
  * Created by patterncat on 2017-11-21.
@@ -22,6 +25,10 @@ public class WhereClause {
     protected String table;
 
     protected Pageable pageable;
+
+    protected String pageSql;
+
+    protected String whereSql;
 
     public WhereClause(String table) {
         this.table = table;
@@ -42,32 +49,27 @@ public class WhereClause {
     }
 
     public String toSql(){
+        this.pageSql = buildPagingSql();
         StringBuilder strBuilder = new StringBuilder();
-        int size = criteria.size();
-        for(int i = 0; i < size; i++){
-            NamedCriteria namedCriteria = criteria.get(i);
-            if(StringUtils.isEmpty(namedCriteria.getOp()) && size > 1 && i != 0){
-                strBuilder.append(" and ");
-            }
-            strBuilder.append(namedCriteria.toSql(namedParams));
-        }
-        if(size == 0){
-            strBuilder.append(" 1=1 ");
-        }
+        whereSql = criteria.stream()
+                .map(e -> e.toSql(namedParams))
+                .collect(Collectors.joining(" and "));
+        strBuilder.append(whereSql);
         return strBuilder.toString();
     }
 
-    public String toFullSql(){
+    public String toSelectSql(){
         SQL sql = new SQL();
         sql.SELECT("*");
         sql.FROM(table);
-        sql.WHERE(toSql());
-        StringBuilder sb = new StringBuilder(sql.toString());
+        sql.WHERE(whereSql);
+        StringBuilder select = new StringBuilder(sql.toString());
+        select.append(pageSql);
+        return select.toString();
+    }
 
-        //paging
-        sb.append(buildPagingSql());
-
-        return sb.toString();
+    public String getPageSql() {
+        return pageSql;
     }
 
     public Map<String, Object> getNamedParams() {
@@ -82,12 +84,18 @@ public class WhereClause {
         Sort sort = pageable.getSort();
         if(sort != null){
             builder.append("order by ");
-            builder.append(sort.toString().replaceAll(":",""));
+            String orderBy = StreamSupport.stream(sort.spliterator(),false)
+                    .map(order -> {
+                        return ValueUtils.camelhumpToUnderline(order.getProperty()) +
+                                " " +
+                                order.getDirection();
+                    }).collect(Collectors.joining(","));
+            builder.append(orderBy);
         }
         builder.append(" limit ");
-        builder.append(pageable.getOffset());
-        builder.append(",");
         builder.append(pageable.getPageSize());
+        builder.append(" offset ");
+        builder.append(pageable.getOffset());
         return builder.toString();
     }
 }

@@ -30,13 +30,17 @@ public class BuilderTest {
 
     @Test
     public void testCriteria(){
-        WhereClause whereClause = WhereClause.newInstance("book");
-        whereClause.add(Restrictions.equalTo("title","this is titile"));
-        whereClause.add(Restrictions.equalTo("id",123L));
-        whereClause.page(new PageRequest(0,10, Sort.Direction.ASC,"createdAt"));
+        Sort sort = new Sort(new Sort.Order(Sort.Direction.DESC,"createdAt"),
+                new Sort.Order(Sort.Direction.ASC,"id"));
+        WhereClause whereClause = WhereClause
+                .newInstance("book")
+                .add(Restrictions.equalTo("title","this is titile"))
+                .add(Restrictions.equalTo("id",123L))
+                .page(new PageRequest(0,10,sort));
 
         System.out.println(whereClause.toSql());
-        System.out.println(whereClause.toFullSql());
+        System.out.println(whereClause.getPageSql());
+        System.out.println(whereClause.toSelectSql());
 
         Map<String,Object> params = whereClause.getNamedParams();
         for(Map.Entry<String,Object> entry : params.entrySet()){
