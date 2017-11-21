@@ -2,6 +2,8 @@
 ### v0.0.3
 - add getter for pagable
 - add build for WhereClause
+- fix where clause null
+- add insert and update selective sql builder
 
 ### v0.0.2
 - add count sql

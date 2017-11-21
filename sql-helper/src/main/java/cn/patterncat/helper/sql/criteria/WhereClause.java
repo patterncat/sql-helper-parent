@@ -4,6 +4,7 @@ import cn.patterncat.helper.sql.builder.SQL;
 import cn.patterncat.helper.sql.util.ValueUtils;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -59,7 +60,9 @@ public class WhereClause {
         SQL sql = new SQL();
         sql.SELECT("count(*)");
         sql.FROM(table);
-        sql.WHERE(whereSql);
+        if(!StringUtils.isEmpty(whereSql)){
+            sql.WHERE(whereSql);
+        }
         return sql.toString();
     }
 
@@ -67,7 +70,9 @@ public class WhereClause {
         SQL sql = new SQL();
         sql.SELECT("*");
         sql.FROM(table);
-        sql.WHERE(whereSql);
+        if(!StringUtils.isEmpty(whereSql)){
+            sql.WHERE(whereSql);
+        }
         StringBuilder select = new StringBuilder(sql.toString());
         select.append(pageSql);
         return select.toString();
