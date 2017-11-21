@@ -1,5 +1,6 @@
 package cn.patterncat.helper.sql.builder;
 
+import cn.patterncat.helper.sql.util.ValueUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.StringUtils;
@@ -80,7 +81,7 @@ public class NamedParamSqlBuilder {
         for (Object value : values) {
             if (value == null) {
                 continue;
-            } else if (isNumber(value)) {
+            } else if (ValueUtils.isNumber(value)) {
                 sbSet.append(value).append(",");
             } else {
                 sbSet.append("'").append(value).append("'").append(",");
@@ -106,19 +107,6 @@ public class NamedParamSqlBuilder {
 
     public Map<String, Object> getParams() {
         return params;
-    }
-
-    private boolean isNumber(Object value) {
-        if (value == null) {
-            return false;
-        } else {
-            return value.getClass() == Byte.TYPE || value.getClass() == Byte.class ||
-                    value.getClass() == Short.TYPE || value.getClass() == Short.class ||
-                    value.getClass() == Integer.TYPE || value.getClass() == Integer.class ||
-                    value.getClass() == Long.TYPE || value.getClass() == Long.class ||
-                    value.getClass() == Float.TYPE || value.getClass() == Float.class ||
-                    value.getClass() == Double.TYPE || value.getClass() == Double.class;
-        }
     }
 
 }
