@@ -34,13 +34,14 @@ public class BuilderTest {
                 new Sort.Order(Sort.Direction.ASC,"id"));
         WhereClause whereClause = WhereClause
                 .newInstance("book")
-                .add(Restrictions.equalTo("title","this is titile"))
+                .add(Restrictions.equalTo("title","this is title"))
                 .add(Restrictions.equalTo("id",123L))
                 .page(new PageRequest(0,10,sort));
 
         System.out.println(whereClause.toSql());
         System.out.println(whereClause.getPageSql());
         System.out.println(whereClause.toSelectSql());
+        System.out.println(whereClause.toCountSql());
 
         Map<String,Object> params = whereClause.getNamedParams();
         for(Map.Entry<String,Object> entry : params.entrySet()){

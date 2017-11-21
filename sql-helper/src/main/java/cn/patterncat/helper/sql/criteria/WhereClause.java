@@ -58,6 +58,14 @@ public class WhereClause {
         return strBuilder.toString();
     }
 
+    public String toCountSql(){
+        SQL sql = new SQL();
+        sql.SELECT("count(*)");
+        sql.FROM(table);
+        sql.WHERE(whereSql);
+        return sql.toString();
+    }
+
     public String toSelectSql(){
         SQL sql = new SQL();
         sql.SELECT("*");
