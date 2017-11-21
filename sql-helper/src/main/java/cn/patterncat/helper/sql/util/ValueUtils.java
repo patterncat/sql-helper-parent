@@ -1,20 +1,11 @@
 package cn.patterncat.helper.sql.util;
 
 import com.google.common.base.CaseFormat;
-import jdk.nashorn.internal.ir.annotations.Ignore;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.BeanUtils;
-
-import java.beans.BeanInfo;
-import java.beans.Introspector;
-import java.beans.PropertyDescriptor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.math.BigDecimal;
-import java.math.BigInteger;
 import java.util.Collections;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -43,29 +34,6 @@ public class ValueUtils {
     }
 
     public static Map<String, Object> beanToMap(Object bean) {
-        if(bean == null){
-            return Collections.emptyMap();
-        }
-        Map<String, Object> map = new HashMap<String, Object>();
-        try {
-            BeanInfo beanInfo = Introspector.getBeanInfo(bean.getClass());
-            PropertyDescriptor[] propertyDescriptors = beanInfo.getPropertyDescriptors();
-            for (PropertyDescriptor property : propertyDescriptors) {
-                String key = property.getName();
-                if ("class".equals(key)) {
-                    continue;
-                }
-                Method getter = property.getReadMethod();
-                Object value = getter.invoke(bean);
-                map.put(key, value);
-            }
-        } catch (Exception e) {
-            LOGGER.error(e.getMessage(),e);
-        }
-        return map;
-    }
-
-    public static Map<String, Object> beanToMapWithIgnore(Object bean) {
         if (bean == null){
             return Collections.emptyMap();
         }
@@ -75,10 +43,6 @@ public class ValueUtils {
             //do not get father class fields
             Field[] fields = clazz.getDeclaredFields();
             for (int i = 0; i < fields.length; i++) {
-                Ignore shouldSkip = fields[i].getAnnotation(Ignore.class);
-                if(shouldSkip != null){
-                    continue;
-                }
                 String name = fields[i].getName();
                 Method method = clazz.getMethod("get" + name.substring(0, 1).toUpperCase() + name.substring(1));
                 Object value = method.invoke(bean);
