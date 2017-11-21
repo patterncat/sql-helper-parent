@@ -1,4 +1,8 @@
 ## changelog
+### v0.0.3
+- add getter for pagable
+- add build for WhereClause
+
 ### v0.0.2
 - add count sql
 

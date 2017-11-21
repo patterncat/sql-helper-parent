@@ -4,7 +4,6 @@ import cn.patterncat.helper.sql.builder.SQL;
 import cn.patterncat.helper.sql.util.ValueUtils;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -48,14 +47,12 @@ public class WhereClause {
         return this;
     }
 
-    public String toSql(){
+    public WhereClause build(){
         this.pageSql = buildPagingSql();
-        StringBuilder strBuilder = new StringBuilder();
-        whereSql = criteria.stream()
+        this.whereSql = criteria.stream()
                 .map(e -> e.toSql(namedParams))
                 .collect(Collectors.joining(" and "));
-        strBuilder.append(whereSql);
-        return strBuilder.toString();
+        return this;
     }
 
     public String toCountSql(){
@@ -74,10 +71,6 @@ public class WhereClause {
         StringBuilder select = new StringBuilder(sql.toString());
         select.append(pageSql);
         return select.toString();
-    }
-
-    public String getPageSql() {
-        return pageSql;
     }
 
     public Map<String, Object> getNamedParams() {
@@ -105,5 +98,25 @@ public class WhereClause {
         builder.append(" offset ");
         builder.append(pageable.getOffset());
         return builder.toString();
+    }
+
+    public List<NamedCriteria> getCriteria() {
+        return criteria;
+    }
+
+    public String getTable() {
+        return table;
+    }
+
+    public Pageable getPageable() {
+        return pageable;
+    }
+
+    public String getWhereSql() {
+        return whereSql;
+    }
+
+    public String getPageSql() {
+        return pageSql;
     }
 }
