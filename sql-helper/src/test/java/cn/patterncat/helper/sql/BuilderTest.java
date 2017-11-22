@@ -38,8 +38,8 @@ public class BuilderTest {
                 .newInstance("book")
                 .add(Restrictions.equalTo("title","this is title"))
                 .add(Restrictions.equalTo("id",123L))
-                .page(new PageRequest(0,10,sort))
-                .build();
+                .page(new PageRequest(0,10,sort));
+//                .build();
 
         System.out.println(whereClause.getWhereSql());
         System.out.println(whereClause.getPageSql());
@@ -54,8 +54,8 @@ public class BuilderTest {
 
     @Test
     public void testSelectAll(){
-        WhereClause whereClause = WhereClause.newInstance("book")
-                .build();
+        WhereClause whereClause = WhereClause.newInstance("book");
+//                .build();
         System.out.println(whereClause.toSelectSql());
     }
 

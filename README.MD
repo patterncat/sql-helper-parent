@@ -1,4 +1,7 @@
 ## changelog
+### v0.0.4
+- add built state for WhereClause make build() not mandatory
+
 ### v0.0.3
 - add getter for pagable
 - add build for WhereClause

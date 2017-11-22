@@ -30,6 +30,8 @@ public class WhereClause {
 
     protected String whereSql;
 
+    protected boolean built = false;
+
     public WhereClause(String table) {
         this.table = table;
     }
@@ -53,10 +55,14 @@ public class WhereClause {
         this.whereSql = criteria.stream()
                 .map(e -> e.toSql(namedParams))
                 .collect(Collectors.joining(" and "));
+        this.built = true;
         return this;
     }
 
     public String toCountSql(){
+        if(!built){
+            build();
+        }
         SQL sql = new SQL();
         sql.SELECT("count(*)");
         sql.FROM(table);
@@ -67,6 +73,9 @@ public class WhereClause {
     }
 
     public String toSelectSql(){
+        if(!built){
+            build();
+        }
         SQL sql = new SQL();
         sql.SELECT("*");
         sql.FROM(table);
