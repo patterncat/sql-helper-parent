@@ -1,4 +1,12 @@
 ## changelog
+### 0.0.6
+extract spring boot version
+```
+mvn clean install -Dspring-boot.version=1.5.10.RELEASE
+```
+
+### 0.0.5
+add jpa spec builder
 ### v0.0.4
 - add built state for WhereClause make build() not mandatory
 
