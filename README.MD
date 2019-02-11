@@ -1,4 +1,8 @@
 ## changelog
+### 0.0.7
+revert spring boot version variable
+update guava to 27.0.1-jre
+
 ### 0.0.6
 extract spring boot version
 ```
